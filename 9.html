@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css">
+  
+  </head>
+  <body>
+   <div class="des">
+Questions?
+How can I talk about fields or topics I don't know?
+
+In class, we had a workshop to collect references and things related to each person's interests, but I was definitely limited to talking about things I didn't know.
+Of course, I study and prepare before that, but it is difficult, especially when it comes to political or sensitive issues.
+
+</div>
+   
+
+   <div id="canvasContainer"></div>
+  <p id="status"></p>
+ 
+
+<script>
+    let model, video, predictions = [];
+    let previousX = 0;
+
+    function preload() {
+      video = createCapture(VIDEO, () => {
+        loadHandTrackingModel();
+      });
+      video.hide();
+    }
+
+    function setup() {
+      const canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('canvasContainer');
+    }
+
+    async function loadHandTrackingModel() {
+      model = await handpose.load();
+      select('#status').html('Hand Tracking Model Loaded');
+      predictHand();
+    }
+
+    function draw() {
+      background(255);
+      if (predictions.length > 0) {
+        drawKeypoints();
+        drawSkeleton();
+        checkForPageTransition();
+      }
+    }
+
+    async function predictHand() {
+      predictions = await model.estimateHands(video.elt);
+      setTimeout(() => predictHand(), 10);
+    }
+
+    function drawKeypoints() {
+      let prediction = predictions[0];
+      for (let j = 0; j < prediction.landmarks.length; j++) {
+        let keypoint = prediction.landmarks[j];
+        fill(255, 0, 0);
+        noStroke();
+        let scaledX = map(keypoint[0], 0, video.width, 0, width);
+        let scaledY = map(keypoint[1], 0, video.height, 0, height);
+        ellipse(scaledX, scaledY, 10, 10);
+      }
+    }
+
+      function drawSkeleton() {
+    let annotations = predictions[0].annotations;
+    stroke(255, 0, 0);
+
+    // Scaling logic for thumb
+    for (let j = 0; j < annotations.thumb.length - 1; j++) {
+        line(
+            map(annotations.thumb[j][0], 0, video.width, 0, width),
+            map(annotations.thumb[j][1], 0, video.height, 0, height),
+            map(annotations.thumb[j + 1][0], 0, video.width, 0, width),
+            map(annotations.thumb[j + 1][1], 0, video.height, 0, height)
+        );
+    }
+
+    // Scaling logic for indexFinger, middleFinger, ringFinger, and pinky
+    let fingers = ["indexFinger", "middleFinger", "ringFinger", "pinky"];
+    for (let finger of fingers) {
+        for (let j = 0; j < annotations[finger].length - 1; j++) {
+            line(
+                map(annotations[finger][j][0], 0, video.width, 0, width),
+                map(annotations[finger][j][1], 0, video.height, 0, height),
+                map(annotations[finger][j + 1][0], 0, video.width, 0, width),
+                map(annotations[finger][j + 1][1], 0, video.height, 0, height)
+            );
+        }
+    }
+
+    // Scaling logic for palmBase to pinky
+    for (let j = 0; j < annotations.pinky.length - 1; j++) {
+        line(
+            map(annotations.palmBase[0][0], 0, video.width, 0, width),
+            map(annotations.palmBase[0][1], 0, video.height, 0, height),
+            map(annotations.pinky[j][0], 0, video.width, 0, width),
+            map(annotations.pinky[j][1], 0, video.height, 0, height)
+        );
+    }
+}
+
+function checkForPageTransition() {
+        let palmX = predictions[0].annotations.palmBase[0][0];
+        let speedThreshold = 15; // Adjust this value based on desired sensitivity
+        let distance = abs(palmX - previousX);
+
+        if (palmX < previousX && distance > speedThreshold) {
+          // Move from right end to left end with sufficient speed, perform page transition
+          window.location.href = "10.html";
+        }
+        previousX = palmX;
+      }
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowRight') {
+          // Right arrow key pressed, navigate to a specific webpage
+          window.location.href = "10.html";
+        } else if (event.key === 'ArrowLeft') {
+          // Left arrow key pressed, perform backward navigation
+          if (history.length > 1) {
+            history.go(-1);
+          } else {
+            // If no previous pages in history, navigate to home page or handle as needed
+            window.location.href = "index.html";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
