@@ -113,7 +113,7 @@ function checkForPageTransition() {
 
         if (palmX < previousX && distance > speedThreshold) {
           // Move from right end to left end with sufficient speed, perform page transition
-          window.location.href = "main.html";
+          window.location.href = "index.html";
         }
         previousX = palmX;
       }
@@ -121,7 +121,7 @@ function checkForPageTransition() {
       document.addEventListener('keydown', function (event) {
         if (event.key === 'ArrowRight') {
           // Right arrow key pressed, navigate to a specific webpage
-          window.location.href = "main.html";
+          window.location.href = "index.html";
         } else if (event.key === 'ArrowLeft') {
           // Left arrow key pressed, perform backward navigation
           if (history.length > 1) {

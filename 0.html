@@ -12,12 +12,13 @@
   
   </head>
   <body>
-   <div class="keyword">JIHO PARK
-     </div>
+   <div class="keyword">SHARING, 
+    NEW PERSPECTIVE, 
+    PLAYFUL </div>
    
 
    <div id="canvasContainer"></div>
-  <p id="status"></p>
+  <p id="status">Loading Model...</p>
  
 
 <script>
@@ -113,25 +114,22 @@ function checkForPageTransition() {
 
         if (palmX < previousX && distance > speedThreshold) {
           // Move from right end to left end with sufficient speed, perform page transition
-         
+          window.location.href = "1.html";
         }
         previousX = palmX;
       }
 
-
-
-
       document.addEventListener('keydown', function (event) {
         if (event.key === 'ArrowRight') {
           // Right arrow key pressed, navigate to a specific webpage
-          window.location.href = "index.html";
+          window.location.href = "1.html";
         } else if (event.key === 'ArrowLeft') {
           // Left arrow key pressed, perform backward navigation
           if (history.length > 1) {
             history.go(-1);
           } else {
             // If no previous pages in history, navigate to home page or handle as needed
-            window.location.href = "main.html";
+            window.location.href = "index.html";
           }
         }
       });

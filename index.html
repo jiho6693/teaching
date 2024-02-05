@@ -12,13 +12,16 @@
   
   </head>
   <body>
-   <div class="keyword">SHARING, 
-    NEW PERSPECTIVE, 
-    PLAYFUL </div>
+   <div class="keyword">JIHO PARK
+     </div>
    
-
+   <div class="des"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    Wave your hand in front of the screen, 
+    From the next page, if you shake your hand, it will move to the next page. 
+    Please use the right arrow key on the keyboard. (If you want to go back, use the left arrow key.)
+    </div>
    <div id="canvasContainer"></div>
-  <p id="status">Loading Model...</p>
+  <p id="status"></p>
  
 
 <script>
@@ -114,22 +117,25 @@ function checkForPageTransition() {
 
         if (palmX < previousX && distance > speedThreshold) {
           // Move from right end to left end with sufficient speed, perform page transition
-          window.location.href = "1.html";
+         
         }
         previousX = palmX;
       }
 
+
+
+
       document.addEventListener('keydown', function (event) {
         if (event.key === 'ArrowRight') {
           // Right arrow key pressed, navigate to a specific webpage
-          window.location.href = "1.html";
+          window.location.href = "0.html";
         } else if (event.key === 'ArrowLeft') {
           // Left arrow key pressed, perform backward navigation
           if (history.length > 1) {
             history.go(-1);
           } else {
             // If no previous pages in history, navigate to home page or handle as needed
-            window.location.href = "index.html";
+            window.location.href = "0.html";
           }
         }
       });
